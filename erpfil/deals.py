@@ -46,7 +46,7 @@ def get_deal(id, check_manager=True):
     ).fetchone()
 
     if deal is None:
-        abort(404, "Deal id {0} doesn't exist.".format(id))
+        abort(404, "Заказ id {0} не найден.".format(id))
 
     if check_manager and deal['manager_id'] != g.user['id']:
         abort(403)
@@ -65,7 +65,7 @@ def create():
         error = None
 
         if not title:
-            error = 'не указано название.'
+            error = 'Не указано название.'
 
         if error is not None:
             flash(error)
@@ -81,7 +81,11 @@ def create():
 
     db = get_db()
     customers = db.execute(
-        'SELECT id, title FROM customer ORDER BY title'
+        'SELECT id, title, partner_type_id, t.customer'
+        ' FROM partner p'
+        ' JOIN partner_type t ON partner_type_id = t.id'
+        ' WHERE t.customer = 1'
+        ' ORDER BY title'
     ).fetchall()
 
     return render_template('deals/create.html', customers=customers)

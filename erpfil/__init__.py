@@ -35,9 +35,9 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from erpfil import auth, deals, customers
+    from erpfil import auth, deals, partners
     app.register_blueprint(auth.bp)
-    app.register_blueprint(customers.bp)
+    app.register_blueprint(partners.bp)
     app.register_blueprint(deals.bp)
 
     # make url_for('index') == url_for('deals.index')

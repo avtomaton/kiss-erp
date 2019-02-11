@@ -8,6 +8,12 @@
   <form method="post">
     <label for="title">Название</label>
     <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <label for="partner_type">Тип</label>
+    <select name="partner_type" id="partner_type" required>
+      {% for partner_type in partner_types %}
+      <option value="{{ partner_type['id'] }}">{{ partner_type['title'] }}</option>
+      {% endfor %}
+    </select>
     <label for="full_name">Полное наименование</label>
     <textarea name="full_name" id="full_name">{{ request.form['full_name'] }}</textarea>
     <label for="phone">Телефон</label>
