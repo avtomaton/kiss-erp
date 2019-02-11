@@ -1,15 +1,37 @@
 -- Initialize the database.
 -- Drop any existing data and create empty tables.
 
+DROP TABLE IF EXISTS partner_type;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS deal;
-DROP TABLE IF EXISTS partner_type;
+DR
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL
+);
+
+CREATE TABLE product_category (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE product_unit (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE product (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  category_id INTEGER,
+  article INTEGER UNIQUE,
+  unit_id INTEGER,
+  comment TEXT,
+  FOREIGN KEY (category_id) REFERENCES product_category (id),
+  FOREIGN KEY (unit_id) REFERENCES product_unit (id)
 );
 
 CREATE TABLE partner_type (
@@ -24,6 +46,7 @@ CREATE TABLE partner (
   title TEXT NOT NULL,
   full_name TEXT,
   phone TEXT,
+  phone_1 TEXT,
   website TEXT,
   contact_person TEXT,
   address TEXT,
@@ -37,11 +60,25 @@ CREATE TABLE partner (
 
 CREATE TABLE deal (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  number INTEGER NOT NULL AUTOINCREMENT,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  customer_id INTEGER NOT NULL,
+  invoice_no TEXT,
+  tz_no TEXT,
   title TEXT NOT NULL,
   body TEXT NOT NULL,
   manager_id INTEGER NOT NULL,
-  customer_id INTEGER NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (manager_id) REFERENCES user (id),
   FOREIGN KEY (customer_id) REFERENCES partner (id)
 );
+
+-- Contractors for each deal (connection table)
+CREATE TABLE deal_contractor (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  deal_id INTEGER NOT NULL,
+  contractor_id INTEGER NOT NULL,
+  FOREIGN KEY (deal_id) REFERENCES deal (id),
+  FOREIGN KEY (contractor_id) REFERENCES partner (id)
+);
+
+
