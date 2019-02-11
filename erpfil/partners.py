@@ -14,7 +14,7 @@ def index():
     """Show all partners."""
     db = get_db()
     partners = db.execute(
-        'SELECT p.id, title, manager_id, username, partner_type_id, t.title'
+        'SELECT p.id, p.title, manager_id, username, partner_type_id, t.title'
         ' FROM partner p'
         ' JOIN user u ON p.manager_id = u.id'
         ' JOIN partner_type t ON partner_type_id = t.id'

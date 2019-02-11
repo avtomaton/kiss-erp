@@ -11,7 +11,7 @@
     <label for="customer">Клиент</label>
     <select name="customer" id="customer" required>
       {% for customer in customers %}
-      <option value="{{ customer['id'] }}">{{ customer['title'] }}</option>
+      <option value="{{ customer['p_id'] }}">{{ customer['p_title'] }}</option>
       {% endfor %}
     </select>
     <label for="body">Описание</label>

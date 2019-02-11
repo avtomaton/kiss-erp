@@ -14,12 +14,12 @@ def index():
     """Show all the deals, most recent first."""
     db = get_db()
     deals = db.execute(
-        'SELECT p.id, p.title, body, p.created, p.manager_id, customer_id,'
+        'SELECT d.id, d.title, body, d.created, d.manager_id, customer_id,'
         ' username, c.title AS customer_title'
-        ' FROM deal p'
-        ' JOIN user u ON p.manager_id = u.id'
-        ' JOIN customer c ON p.customer_id = c.id'
-        ' ORDER BY p.created DESC'
+        ' FROM deal d'
+        ' JOIN user u ON d.manager_id = u.id'
+        ' JOIN partner c ON d.customer_id = c.id'
+        ' ORDER BY d.created DESC'
     ).fetchall()
     return render_template('deals/index.html', deals=deals)
 
@@ -37,11 +37,11 @@ def get_deal(id, check_manager=True):
     :raise 403: if the current user isn't the owner
     """
     deal = get_db().execute(
-        'SELECT p.id, p.title, body, p.created, p.manager_id, customer_id, username'
-        ' FROM deal p'
-        ' JOIN user u ON p.manager_id = u.id'
-        ' JOIN customer c ON p.customer_id = c.id'
-        ' WHERE p.id = ?',
+        'SELECT d.id, d.title, body, d.created, d.manager_id, customer_id, username'
+        ' FROM deal d'
+        ' JOIN user u ON d.manager_id = u.id'
+        ' JOIN partner c ON d.customer_id = c.id'
+        ' WHERE d.id = ?',
         (id,)
     ).fetchone()
 
@@ -81,11 +81,11 @@ def create():
 
     db = get_db()
     customers = db.execute(
-        'SELECT id, title, partner_type_id, t.customer'
+        'SELECT p.id AS p_id, p.title AS p_title, partner_type_id, t.customer'
         ' FROM partner p'
         ' JOIN partner_type t ON partner_type_id = t.id'
         ' WHERE t.customer = 1'
-        ' ORDER BY title'
+        ' ORDER BY p_title'
     ).fetchall()
 
     return render_template('deals/create.html', customers=customers)
