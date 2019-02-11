@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Новый контрагент{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Название</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <label for="full_name">Полное наименование</label>
+    <textarea name="full_name" id="full_name">{{ request.form['full_name'] }}</textarea>
+    <label for="phone">Телефон</label>
+    <input name="phone" id="phone" value="{{ request.form['phone'] }}" required>
+    <label for="website">Сайт</label>
+    <input name="website" id="website" value="{{ request.form['website'] }}" required>
+    <label for="contact_person">Контактное лицо</label>
+    <textarea name="contact_person" id="contact_person">{{ request.form['contact_person'] }}</textarea>
+    <label for="address">Адрес</label>
+    <textarea name="address" id="address">{{ request.form['address'] }}</textarea>
+    <label for="note">Примечание</label>
+    <textarea name="note" id="note">{{ request.form['note'] }}</textarea>
+    <input type="submit" value="Сохранить">
+  </form>
+{% endblock %}

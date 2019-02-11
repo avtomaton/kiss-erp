@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Новая запись{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Название</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <label for="customer">Клиент</label>
+    <select name="customer" id="customer" required>
+      {% for customer in customers %}
+      <option value="{{ customer['id'] }}">{{ customer['title'] }}</option>
+      {% endfor %}
+    </select>
+    <label for="body">Описание</label>
+    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    <input type="submit" value="Сохранить">
+  </form>
+{% endblock %}

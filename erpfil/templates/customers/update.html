@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Изменить "{{ customer['title'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Название</label>
+    <input name="title" id="title" value="{{ request.form['title'] or customer['title'] }}" required>
+    <label for="full_name">Полное наименование</label>
+    <textarea name="full_name" id="full_name">
+      {{ request.form['full_name'] or customer['full_name'] }}
+    </textarea>
+    <input type="submit" value="Сохранить">
+  </form>
+  <hr>
+  <form action="{{ url_for('customers.delete', id=customer['id']) }}" method="post">
+    <input class="danger" type="submit" value="Удалить" onclick="return confirm('Вы уверены?');">
+  </form>
+{% endblock %}
