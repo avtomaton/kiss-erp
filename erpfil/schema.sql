@@ -62,9 +62,12 @@ CREATE TABLE deal (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   number INTEGER NOT NULL AUTOINCREMENT,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  date_expected TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   customer_id INTEGER NOT NULL,
   invoice_no TEXT,
   tz_no TEXT,
+  payment_order_no TEXT,
   title TEXT NOT NULL,
   body TEXT NOT NULL,
   manager_id INTEGER NOT NULL,
@@ -73,11 +76,17 @@ CREATE TABLE deal (
 );
 
 -- Contractors for each deal (connection table)
-CREATE TABLE deal_contractor (
+CREATE TABLE deal_product (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   deal_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  product_customer_quantity INTEGER NOT NULL,
+  product_supplier_quantity INTEGER NOT NULL,
+  product_customer_price REAL NOT NULL,
+  product_supplier_price REAL NOT NULL,
   contractor_id INTEGER NOT NULL,
   FOREIGN KEY (deal_id) REFERENCES deal (id),
+  FOREIGN KEY (product_id) REFERENCES product(id),
   FOREIGN KEY (contractor_id) REFERENCES partner (id)
 );
 
