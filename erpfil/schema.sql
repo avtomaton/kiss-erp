@@ -1,11 +1,14 @@
 -- Initialize the database.
 -- Drop any existing data and create empty tables.
 
-DROP TABLE IF EXISTS partner_type;
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS product_category;
+DROP TABLE IF EXISTS product_unit;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS partner_type;
+DROP TABLE IF EXISTS partner;
 DROP TABLE IF EXISTS deal;
-DR
+DROP TABLE IF EXISTS deal_product;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,6 +47,7 @@ CREATE TABLE partner_type (
 CREATE TABLE partner (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
+  partner_type_id INTEGER NOT NULL,
   full_name TEXT,
   phone TEXT,
   phone_1 TEXT,
@@ -52,7 +56,6 @@ CREATE TABLE partner (
   address TEXT,
   note TEXT,
   manager_id INTEGER NOT NULL,
-  partner_type_id INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (manager_id) REFERENCES user (id),
   FOREIGN KEY (partner_type_id) REFERENCES partner_type (id)
