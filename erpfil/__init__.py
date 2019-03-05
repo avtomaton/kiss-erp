@@ -35,12 +35,12 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from erpfil import auth, deals, partner
+    from erpfil import auth, deal, partner
     app.register_blueprint(auth.bp)
     app.register_blueprint(partner.bp)
-    app.register_blueprint(deals.bp)
+    app.register_blueprint(deal.bp)
 
-    # make url_for('index') == url_for('deals.index')
-    app.add_url_rule('/', endpoint='deals.index')
+    # make url_for('index') == url_for('deal.index')
+    app.add_url_rule('/', endpoint='deal.index')
 
     return app

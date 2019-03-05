@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 from erpfil.auth import login_required
 from erpfil.db import get_db
 
-bp = Blueprint('deals', __name__, url_prefix='/deals')
+bp = Blueprint('deal', __name__, url_prefix='/deal')
 
 
 @bp.route('/')
@@ -77,7 +77,7 @@ def create():
                 (title, body, g.user['id'], customer_id)
             )
             db.commit()
-            return redirect(url_for('deals.index'))
+            return redirect(url_for('deal.index'))
 
     db = get_db()
     customers = db.execute(
@@ -114,7 +114,7 @@ def update(id):
                 (title, body, id)
             )
             db.commit()
-            return redirect(url_for('deals.index'))
+            return redirect(url_for('deal.index'))
 
     return render_template('deals/update.html', deal=deal)
 
@@ -131,4 +131,4 @@ def delete(id):
     db = get_db()
     db.execute('DELETE FROM deal WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('deals.index'))
+    return redirect(url_for('deal.index'))
