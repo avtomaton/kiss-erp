@@ -1,19 +1,32 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Изменить "{{ deal['title'] }}"{% endblock %}</h1>
+  <h1>{% block title %}{{ form_name }}"{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
     <label for="title">Название</label>
-    <input name="title" id="title" value="{{ request.form['title'] or deal['title'] }}" required>
+    <input name="title" id="title"
+           value="{{ request.form['title'] or deal['title'] }}" required>
+    <label for="customer_id">Клиент</label>
+    <select name="customer_id" id="customer_id" required>
+      {% for customer in customers %}
+      <option value="{{ customer['p_id'] }}"
+        {% if deal['customer_id']==customer['p_id'] %} selected {% endif %}
+         >{{ customer['p_title'] }}</option>
+      {% endfor %}
+    </select>
+    <a href="{{ url_for('partner.create') }}">Добавить контрагента</a>
     <label for="body">Содержание</label>
-    <textarea name="body" id="body">{{ request.form['body'] or deal['body'] }}</textarea>
+    <textarea name="body" id="body"
+      >{{ request.form['body'] or deal['body'] or '' }}</textarea>
     <input type="submit" value="Сохранить">
   </form>
   <hr>
+  {% if 'id' in deal %}
   <form action="{{ url_for('deals.delete', id=deal['id']) }}" method="post">
     <input class="danger" type="submit" value="Удалить" onclick="return confirm('Вы уверены?');">
   </form>
+  <% endif %>
 {% endblock %}

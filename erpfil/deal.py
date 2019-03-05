@@ -4,15 +4,35 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from erpfil.auth import login_required
-from erpfil.db import get_db
+from erpfil import db as database
 
 bp = Blueprint('deal', __name__, url_prefix='/deal')
+
+
+def deal_defaults():
+    return {
+        'title': '',
+        'number': '',
+        'customer_id': 1,
+        'invoice_no': '',
+        'tz_no': '',
+        'payment_order_no': '',
+        'body': ''
+    }
+
+
+def deal_fields():
+    return ['id'] + [k for k, v in deal_defaults().items()]
+
+
+def post_values(form):
+    return {k: form[k] for k in deal_fields() if k != 'id'}
 
 
 @bp.route('/')
 def index():
     """Show all the deals, most recent first."""
-    db = get_db()
+    db = database.get_db()
     deals = db.execute(
         'SELECT d.id, d.title, body, d.created, d.manager_id, customer_id,'
         ' username, c.title AS customer_title'
@@ -36,7 +56,7 @@ def get_deal(id, check_manager=True):
     :raise 404: if a deal with the given id doesn't exist
     :raise 403: if the current user isn't the owner
     """
-    deal = get_db().execute(
+    deal = database.get_db().execute(
         'SELECT d.id, d.title, body, d.created, d.manager_id, customer_id, username'
         ' FROM deal d'
         ' JOIN user u ON d.manager_id = u.id'
@@ -70,7 +90,7 @@ def create():
         if error is not None:
             flash(error)
         else:
-            db = get_db()
+            db = database.get_db()
             db.execute(
                 'INSERT INTO deal (title, body, manager_id, customer_id)'
                 ' VALUES (?, ?, ?, ?)',
@@ -79,7 +99,7 @@ def create():
             db.commit()
             return redirect(url_for('deal.index'))
 
-    db = get_db()
+    db = database.get_db()
     customers = db.execute(
         'SELECT p.id AS p_id, p.title AS p_title, partner_type_id, t.customer'
         ' FROM partner p'
@@ -88,7 +108,10 @@ def create():
         ' ORDER BY p_title'
     ).fetchall()
 
-    return render_template('deals/create.html', customers=customers)
+    return render_template('deals/create.html',
+                           form_name='Создать заказ',
+                           customers=customers,
+                           deal=deal)
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
@@ -108,7 +131,7 @@ def update(id):
         if error is not None:
             flash(error)
         else:
-            db = get_db()
+            db = database.get_db()
             db.execute(
                 'UPDATE deal SET title = ?, body = ? WHERE id = ?',
                 (title, body, id)
@@ -116,7 +139,9 @@ def update(id):
             db.commit()
             return redirect(url_for('deal.index'))
 
-    return render_template('deals/update.html', deal=deal)
+    return render_template('deals/update.html',
+                           form_name='Обновить заказ',
+                           deal=deal)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
@@ -128,7 +153,7 @@ def delete(id):
     deal's manager.
     """
     get_deal(id)
-    db = get_db()
+    db = database.get_db()
     db.execute('DELETE FROM deal WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('deal.index'))
