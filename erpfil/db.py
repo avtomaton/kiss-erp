@@ -3,6 +3,7 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+from werkzeug.security import generate_password_hash
 
 
 def format_post_val(s):
@@ -30,7 +31,7 @@ def update_db_str(table, key_val):
     """
     prefix = "UPDATE {} SET ".format(table)
     values = []
-    for key, val in key_val:
+    for key, val in key_val.items():
         prefix += "{} = ?, ".format(key)
         values.append(val)
     prefix = prefix[:-2] + " "
@@ -48,9 +49,9 @@ def insert_db_str(table, key_val):
     field_names = ''
     field_val_str = ''
     values = []
-    for key, val in key_val:
+    for key, val in key_val.items():
         field_names += "{}, ".format(key)
-        field_val_str = '?, '
+        field_val_str += '?, '
         values.append(val)
     field_names = field_names[:-2] + ' '
     field_val_str = field_val_str[:-2] + ' '
@@ -96,6 +97,20 @@ def init_db():
 def db_ru_defaults():
     """Fill the database with the default preset."""
     db = get_db()
+    db.execute('DELETE FROM user')
+    db.execute(
+        'INSERT INTO user (username, password) VALUES (?, ?)',
+        ('VP', generate_password_hash('123456'))
+    )
+    db.execute(
+        'INSERT INTO user (username, password) VALUES (?, ?)',
+        ('TT', generate_password_hash('123456'))
+    )
+    db.execute(
+        'INSERT INTO user (username, password) VALUES (?, ?)',
+        ('YS', generate_password_hash('123456'))
+    )
+    db.commit()
 
     with current_app.open_resource('initial-data-ru.sql') as f:
         db.executescript(f.read().decode('utf8'))
@@ -123,3 +138,4 @@ def init_app(app):
     """
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(db_ru_defaults_command)
