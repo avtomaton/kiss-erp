@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Контрагенты{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('partners.create') }}">Создать</a>
+    <a class="action" href="{{ url_for('partner.create') }}">Создать</a>
   {% endif %}
 {% endblock %}
 
@@ -12,16 +12,16 @@
     <article class="deal">
       <header>
         <div>
-          <h1>{{ partner['title'] }}</h1>
+          <h1>{{ partner['p_title'] }}</h1>
           <div class="about">
             Менеджер: {{ partner['username'] }}
           </div>
         </div>
         {% if g.user['id'] == partner['manager_id'] %}
-          <a class="action" href="{{ url_for('partners.update', id=partner['id']) }}">Изменить</a>
+          <a class="action" href="{{ url_for('partner.update', id=partner['p_id']) }}">Изменить</a>
         {% endif %}
       </header>
-      <p class="body">{{ partner['body'] }}</p>
+      <p class="body">{{ partner['p_contact_person'] or '' }}</p>
     </article>
     {% if not loop.last %}
       <hr>
