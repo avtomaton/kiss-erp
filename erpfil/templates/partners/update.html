@@ -19,25 +19,25 @@
     </select>
     <label for="full_name">Полное наименование</label>
     <textarea name="full_name" id="full_name"
-      >{{ request.form['full_name'] or partner['full_name'] }}</textarea>
+      >{{ request.form['full_name'] or partner['full_name'] or '' }}</textarea>
     <label for="phone">Телефон</label>
     <input name="phone" id="phone"
-           value="{{ request.form['phone'] or partner['phone'] }}" required>
+           value="{{ request.form['phone'] or partner['phone'] or '' }}" required>
     <label for="phone_1">Ещё телефон</label>
     <input name="phone_1" id="phone_1"
-           value="{{ request.form['phone_1'] or partner['phone_1'] }}">
+           value="{{ request.form['phone_1'] or partner['phone_1'] or '' }}">
     <label for="website">Сайт</label>
     <input name="website" id="website"
-           value="{{ request.form['website'] or partner['website'] }}">
+           value="{{ request.form['website'] or partner['website'] or '' }}">
     <label for="contact_person">Контактное лицо</label>
     <textarea name="contact_person" id="contact_person"
-      >{{ request.form['contact_person'] or partner['contact_person'] }}</textarea>
+      >{{ request.form['contact_person'] or partner['contact_person'] or '' }}</textarea>
     <label for="address">Адрес</label>
     <textarea name="address" id="address"
-      >{{ request.form['address'] or partner['address'] }}</textarea>
+      >{{ request.form['address'] or partner['address'] or '' }}</textarea>
     <label for="note">Примечание</label>
     <textarea name="note" id="note"
-      >{{ request.form['note'] or partner['note'] }}</textarea>
+      >{{ request.form['note'] or partner['note'] or '' }}</textarea>
     <input type="submit" value="Сохранить">
   </form>
   <hr>
