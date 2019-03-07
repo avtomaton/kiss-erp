@@ -89,6 +89,11 @@ CREATE TABLE deal_product (
   product_customer_price REAL NOT NULL,
   product_supplier_price REAL NOT NULL,
   contractor_id INTEGER NOT NULL,
+  contractor_invoice_no TEXT,
+  date_paid TIMESTAMP,
+  date_shipment TIMESTAMP,
+  date_documents TIMESTAMP,
+  date_completed TIMESTAMP,
   FOREIGN KEY (deal_id) REFERENCES deal (id),
   FOREIGN KEY (product_id) REFERENCES product(id),
   FOREIGN KEY (contractor_id) REFERENCES partner (id)
